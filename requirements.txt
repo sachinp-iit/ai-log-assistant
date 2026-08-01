@@ -1,0 +1,76 @@
+# ==========================================================
+# FASTAPI BACKEND
+# ==========================================================
+
+fastapi                         # Main backend API framework
+uvicorn[standard]               # ASGI production server
+starlette                       # FastAPI underlying framework
+
+
+# ==========================================================
+# LANGCHAIN + AGENTIC AI
+# ==========================================================
+
+langchain                       # Core LangChain framework
+langchain-Core                  # LangChain base abstractions
+langchain-community             # Community integrations
+langchain-openai                # OpenAI/OpenRouter integrations
+langgraph                       # Multi-agent orchestration framework
+langchain-text-splitters         # Recursive Text Splitter
+langchain-huggingface           # Langchain Embedding
+langsmith                       # Tracing, Debugging, Monitoring
+
+
+# ==========================================================
+# OPENROUTER / LLM CONNECTIVITY
+# ==========================================================
+
+openai                          # OpenRouter compatible SDK
+tiktoken                        # Token counting and token utilities
+
+
+# ==========================================================
+# VECTOR DATABASE
+# ==========================================================
+
+qdrant-client                   # Qdrant vector database client
+
+
+# ==========================================================
+# EMBEDDING + RERANKING MODELS
+# ==========================================================
+
+sentence-transformers           # Embedding model framework
+transformers                    # HuggingFace transformer models
+torch                           # Deep Learning backend
+accelerate                      # Optimized model loading/inference
+FlagEmbedding                   # BGE Embedding + ReRanker models
+rank-bm25                       # BM25 keyword search ranking
+
+
+# ==========================================================
+# FILES / HTTP / ASYNC
+# ==========================================================
+
+aiofiles                        # Async file handling
+httpx                           # Async HTTP Client
+
+
+# ==========================================================
+# CONFIGURATION MANAGEMENT
+# ==========================================================
+
+python-dotenv                   # Environment variable loader
+pydantic                        # Data validation
+pydantic-settings               # App configuration managment
+
+
+# ==========================================================
+# UTILITIES
+# ==========================================================
+
+orjson                          # High performance JSON parser
+tenacity                        # Retry handling
+jinja2                          # Prompt templating
+
+

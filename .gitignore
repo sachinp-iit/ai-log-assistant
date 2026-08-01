@@ -1,0 +1,14 @@
+# Virtual Environment
+Event_Search_Agent_VENV/
+venv/
+ENV/
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment Variables
+.env
+
+# VS Code
+.vscode/
