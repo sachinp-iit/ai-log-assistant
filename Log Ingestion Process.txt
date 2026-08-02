@@ -1,0 +1,14 @@
+Log Ingestion Core Pipeline:
+
+1. Batch log ingestion(insertion)
+2. Log processing
+3. Document creation
+4. Text Splitting + Chunking
+5. Embedding generation
+6. Qdrant storage
+7. RAG retrieval
+8. Chat agent
+9. Anomaly detection
+10. Root cause analysis
+11. Incident summarization
+12. Production APIs

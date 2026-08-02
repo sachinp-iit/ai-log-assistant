@@ -2,6 +2,7 @@
 Event_Search_Agent_VENV/
 venv/
 ENV/
+ai_log_assistant_venv/
 
 # Python
 __pycache__/

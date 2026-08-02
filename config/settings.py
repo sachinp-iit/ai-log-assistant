@@ -74,6 +74,17 @@ class Settings(BaseSettings):
     LANGSMITH_PROJECT: str
     
     
+    # =========================================================
+    # OPENTELEMETRY CONFIGURATION
+    # =========================================================
+    OTEL_SERVICE_NAME: str
+    OTEL_SERVICE_VERSION: str
+    OTEL_EXPORT_OTLP_ENDPOINT: str
+    OTEL_EXPORT_OTLP_PROTOCOL: str
+    OTEL_RESOURCE_ATTRIBUTES: str
+    OTEL_LOG_LEVEL: str
+    
+    
     # ==========================================================
     # LOGGING
     # ==========================================================

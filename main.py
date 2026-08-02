@@ -1,9 +1,15 @@
 # main.py
 
-from fastapi import FastAPI
-from config.settings import settings
+from contextlib import asynccontextmanager
+
 from dotenv import load_dotenv
+from fastapi import FastAPI
+from api.routes import router
 import uvicorn
+
+from config.settings import settings
+from core.telemetry import initialize_telemetry
+from core.exceptions import register_exception_handlers
 
 
 # ==========================================================
@@ -12,47 +18,76 @@ import uvicorn
 
 load_dotenv()
 
+# ==========================================================
+# APPLICATION LIFESPAN
+# ==========================================================
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """
+    Handles application startup and shutdown events.
+    """
+
+    # Startup
+    print("Starting AI Log Assistant...")
+    initialize_telemetry(app)
+
+    yield
+
+    # Shutdown
+    print("Shutting down AI Log Assistant...")
+    
 
 # ==========================================================
-# FASTAPI APPLICATION INITIALIZATION
+# FASTAPI APPLICATION
 # ==========================================================
 
 app = FastAPI(
-    title = settings.APP_NAME,
-    version = settings.APP_VERSION,
-    debug = settings.DEBUG
+    title=settings.APP_NAME,
+    version=settings.APP_VERSION,
+    debug=settings.DEBUG,
+    lifespan=lifespan,
 )
 
+# ==========================================================
+# APPLICATION CONFIGURATION SETTINGS
+# ==========================================================
+
+app.include_router(router)
+register_exception_handlers(app)
 
 # ==========================================================
 # ROOT ENDPOINT
 # ==========================================================
 
-@app.get("/")
+@app.get("/", tags=["Root"])
 async def root():
-    
     return {
-        "message": "AI Log Assistant",
+        "application": settings.APP_NAME,
         "version": settings.APP_VERSION,
-        "status": "healthy"
+        "status": "running",
     }
-    
+
 
 # ==========================================================
-# APPLICATION STARTUP EVENT
+# HEALTH CHECK ENDPOINT
 # ==========================================================
 
-@app.on_event("startup")
-async def startup_event():
-    
-    print("Application startup completed.")
-    
+@app.get("/health", tags=["Health"])
+async def health():
+    return {
+        "status": "healthy",
+    }
+
 
 # ==========================================================
-# APPLICATION SHUTDOWN EVENT
+# APPLICATION ENTRYPOINT
 # ==========================================================
 
-@app.on_event("shutdown")
-async def shutdown_event():
-    
-    print("Application shutdown completed.")
+if __name__ == "__main__":
+    uvicorn.run(
+        "main:app",
+        host=settings.APP_HOST,
+        port=settings.APP_PORT,
+        reload=settings.DEBUG,
+    )
