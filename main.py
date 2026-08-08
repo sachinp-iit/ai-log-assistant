@@ -11,6 +11,8 @@ from config.settings import settings
 from core.telemetry import initialize_telemetry
 from core.exceptions import register_exception_handlers
 
+from api.ingestion import router as ingestion_router
+
 
 # ==========================================================
 # LOAD ENVIRONMENT CONFIGURAITON
@@ -54,6 +56,7 @@ app = FastAPI(
 # ==========================================================
 
 app.include_router(router)
+app.include_router(ingestion_router)
 register_exception_handlers(app)
 
 # ==========================================================
