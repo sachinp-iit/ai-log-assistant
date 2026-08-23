@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from api.routes import router
+
 import uvicorn
 
 from config.settings import settings
@@ -13,6 +14,10 @@ from core.exceptions import register_exception_handlers
 
 from api.ingestion import router as ingestion_router
 from api.chat import router as chat_router
+from api.anomaly import router as anomaly_router
+from api.root_cause import router as root_cause_router
+from api.summary import router as summary_router
+from api.search import router as search_router
 
 
 # ==========================================================
@@ -59,6 +64,10 @@ app = FastAPI(
 app.include_router(router)
 app.include_router(ingestion_router)
 app.include_router(chat_router)
+app.include_router(search_router)
+app.include_router(anomaly_router)
+app.include_router(summary_router)
+app.include_router(root_cause_router)
 
 register_exception_handlers(app)
 

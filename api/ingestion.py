@@ -9,8 +9,10 @@ router = APIRouter(prefix="/ingestion", tags=["Ingestion"])
 
 @router.post("/run")
 async def run_ingestion():
+    """Run the infrastructure log ingestion pipeline."""
     
-    service = IngestionService(settings.INFRA_LOG_DIRECTORY)
+    service = IngestionService(settings.INFRA_LOG_DIRECTORY)    
+    service.run_ingestions()
     
     return {
         "status": "completed",

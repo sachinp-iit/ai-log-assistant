@@ -7,9 +7,14 @@ from jinja2 import Environment, FileSystemLoader
 from langchain.agents import create_agent
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
+from langgraph.checkpoint.memory import InMemorySaver
 
 from config.settings import settings
 from services.retrieval_service import RetrievalService
+
+from agents.anomaly_agent import detect_anomalies
+from agents.root_cause_agent import analyze_root_cause
+from agents.summary_agent import summarize_incident
 
 # ==========================================================
 # JINJA2 PROMPT
@@ -29,6 +34,7 @@ prompt_template = prompt_environment.get_template("retrieval_agent.j2")
 # ==========================================================
 
 retrieval_service = RetrievalService()
+checkpointer = InMemorySaver()
 
 @tool
 def search_infrastructure_logs(query: str) -> list[dict]:
@@ -56,6 +62,10 @@ llm = ChatOpenAI(
 
 log_agent = create_agent(
     model = llm,
-    tools = [search_infrastructure_logs],
-    system_prompt = prompt_template.render()
+    tools = [search_infrastructure_logs, 
+             detect_anomalies, 
+             analyze_root_cause,
+             summarize_incident],
+    system_prompt = prompt_template.render(),
+    checkpointer = checkpointer,
 )
