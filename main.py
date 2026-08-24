@@ -18,6 +18,8 @@ from api.anomaly import router as anomaly_router
 from api.root_cause import router as root_cause_router
 from api.summary import router as summary_router
 from api.search import router as search_router
+from api.alert import router as alert_router
+from api.metrics import router as metrics_router
 
 
 # ==========================================================
@@ -68,6 +70,8 @@ app.include_router(search_router)
 app.include_router(anomaly_router)
 app.include_router(summary_router)
 app.include_router(root_cause_router)
+app.include_router(alert_router)
+app.include_router(metrics_router)
 
 register_exception_handlers(app)
 

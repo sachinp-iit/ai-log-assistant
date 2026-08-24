@@ -15,6 +15,7 @@ from services.retrieval_service import RetrievalService
 from agents.anomaly_agent import detect_anomalies
 from agents.root_cause_agent import analyze_root_cause
 from agents.summary_agent import summarize_incident
+from agents.alert_agent import generate_alert
 
 # ==========================================================
 # JINJA2 PROMPT
@@ -65,7 +66,8 @@ log_agent = create_agent(
     tools = [search_infrastructure_logs, 
              detect_anomalies, 
              analyze_root_cause,
-             summarize_incident],
+             summarize_incident,
+             generate_alert],
     system_prompt = prompt_template.render(),
     checkpointer = checkpointer,
 )

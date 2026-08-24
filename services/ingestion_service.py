@@ -166,55 +166,69 @@ class IngestionService:
             )
             
     
-    def ingest_batches(self, chunks: list[Document], 
-                       embeddings: HuggingFaceEmbeddings, client: QdrantClient) -> None:
-        
+    def ingest_batches(self, chunks: list[Document], embeddings: HuggingFaceEmbeddings,
+    client: QdrantClient,) -> None:
+        """
+        Process document chunks in parallel batches and store them in Qdrant.
+        """
+
         batch_size = settings.INGESTION_BATCH_SIZE
-        
+
         batches = [
             chunks[i:i + batch_size]
             for i in range(0, len(chunks), batch_size)
         ]
-        
-        # --------------------------------- INNER FUNCTION START HERE --------------------------------------
-        # Inner Batch Processing Function
-        def process_batch(batch_index: int, batch: list[Document]) -> None:
-            
+
+        def process_batch(
+            batch_index: int,
+            batch: list[Document],
+        ) -> None:
+            """
+            Generate embeddings and store one batch in Qdrant.
+            """
+
             vectors = embeddings.embed_documents(
                 [document.page_content for document in batch]
             )
-            
+
             points = [
                 PointStruct(
-                    id = batch_index * batch_size + 1,
-                    vector = vector,
-                    payload = {
+                    # Every document gets a unique Qdrant ID.
+                    id=batch_index * batch_size + i,
+                    vector=vector,
+                    payload={
                         "page_content": document.page_content,
-                        **document.metadata
+                        **document.metadata,
                     },
                 )
-                for i, (document, vector) in enumerate(zip(batch, vectors))
+                for i, (document, vector) in enumerate(
+                    zip(batch, vectors)
+                )
             ]
-            
+
             client.upsert(
-                collection_name = settings.QDRANT_COLLECTION, 
-                points = points,
+                collection_name=settings.QDRANT_COLLECTION,
+                points=points,
             )
-            
+
             logger.info(
-                f"Batch {batch_index + 1}/{len(batches)} ingested."
+                f"Batch {batch_index + 1}/{len(batches)} "
+                f"ingested: {len(points)} points."
             )
-            
-        # --------------------------------- INNER FUNCTION ENDS HERE --------------------------------------
-            
+
         with ThreadPoolExecutor(
-            max_workers = settings.MAX_CONCURRENT_BATCHES
-        ) as executor:       
+            max_workers=settings.MAX_CONCURRENT_BATCHES
+        ) as executor:
+
             futures = [
-                executor.submit(process_batch, i, batch)
-                for i, batch in enumerate(batches)
+                executor.submit(
+                    process_batch,
+                    batch_index,
+                    batch,
+                )
+                for batch_index, batch in enumerate(batches)
             ]
-            
+
             for future in futures:
                 future.result()
                 
